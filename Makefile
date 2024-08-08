@@ -5,14 +5,15 @@ BUILD_DIR=build
 CC=gcc
 CFLAGS=-Wall
 
+TEST_SOURCE_FILES=$(wildcard $(TEST_DIR)/*.c)
+TEST_OUTPUT_FILES=$(patsubst $(TEST_DIR)/%.c, $(BUILD_DIR)/%, $(TEST_SOURCE_FILES))
+
 .PHONY: all test always clean
 
-all: test
+test: $(TEST_OUTPUT_FILES)
 
-test: $(BUILD_DIR)/json_parser_test
-
-$(BUILD_DIR)/json_parser_test: always $(TEST_DIR)/json_parser_test.c $(SOURCE_DIR)/json_parser.c
-	$(CC) $(CFLAGS) -o $(BUILD_DIR)/json_parser_test $(TEST_DIR)/json_parser_test.c $(SOURCE_DIR)/json_parser.c
+$(BUILD_DIR)/%: $(TEST_DIR)/%.c $(SOURCE_DIR)/json_parser.c always
+	$(CC) $(CFLAGS) -o $@ $< $(SOURCE_DIR)/json_parser.c
 
 always:
 	mkdir -p build
