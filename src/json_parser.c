@@ -9,7 +9,7 @@ JSON* new_JSON() {
 
 // returns the rest of the source
 char* skip_whitespace(char* source) {
-  while (*source == ' ' || *source == '\n' || *source == '\t')
+  while (*source == ' ' || *source == '\t' || *source == '\n' || *source == '\r')
     ++source;
 
   return source;

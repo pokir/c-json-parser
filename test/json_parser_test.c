@@ -139,7 +139,7 @@ bool object_test() {
 bool whitespace_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "\n\t{\n  \"one\"\n \t\n : \n\"two\" \n\n}\n\t \n")
+  bool pass = parse_json(json, "\n\t{\n  \"one\"\n \t\n : \r\n\"two\" \n\r\n}\n\t \n")
 
     && json->type == OBJECT
     && json->string_value == NULL
