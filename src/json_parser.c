@@ -16,7 +16,7 @@ char* skip_whitespace(char* source) {
 }
 
 // returns the rest of the source, or NULL if there was an error
-char* parse_string(JSON* output_json, char* source, enum JSON_context context) {
+char* parse_string(JSON* output_json, char* source) {
   if (*source != '"') return NULL;
   ++source;
 
@@ -28,7 +28,7 @@ char* parse_string(JSON* output_json, char* source, enum JSON_context context) {
       return NULL;
     } else if (*source == '"') {
       // end the string
-      output_json->type = context == OBJECT_CONTEXT ? OBJECT_KEY : STRING;
+      output_json->type = STRING;
 
       int word_length = source - word;
       output_json->string_value = malloc((word_length + 1) * sizeof(char));
@@ -105,10 +105,10 @@ char* parse_number(JSON* output_json, char* source) {
 }
 
 // returns the rest of the source, or NULL if there was an error
-char* parse_value(JSON* output_json, char* source, enum JSON_context context) {
+char* parse_value(JSON* output_json, char* source) {
   char* old_source = source;
 
-  source = parse_string(output_json, old_source, context);
+  source = parse_string(output_json, old_source);
   if (source == NULL) source = parse_number(output_json, old_source);
   if (source == NULL) source = parse_boolean(output_json, old_source);
   if (source == NULL) source = parse_null(output_json, old_source);
@@ -120,7 +120,7 @@ char* parse_value(JSON* output_json, char* source, enum JSON_context context) {
 
 // returns the rest of the source, or NULL if there was an error
 char* parse_object_entry(JSON* output_json, char* source) {
-  source = parse_string(output_json, source, OBJECT_CONTEXT);
+  source = parse_string(output_json, source);
   if (source == NULL) return NULL;
 
   source = skip_whitespace(source);
@@ -224,7 +224,7 @@ char* parse_object(JSON* output_json, char* source) {
 char* parse_any(JSON* output_json, char* source) {
   char* old_source = source;
 
-  source = parse_value(output_json, old_source, NO_CONTEXT);
+  source = parse_value(output_json, old_source);
   if (source == NULL) source = parse_object(output_json, old_source);
   if (source == NULL) source = parse_array(output_json, old_source);
 

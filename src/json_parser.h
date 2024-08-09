@@ -3,12 +3,11 @@
 #include <stdbool.h>
 
 enum JSON_type {
-  STRING,
+  STRING, // for strings and object keys
   NUMBER,
   BOOLEAN,
   ARRAY,
   OBJECT,
-  OBJECT_KEY,
   NULL_VALUE
 };
 
@@ -24,21 +23,14 @@ typedef struct JSON {
   bool boolean_value; // for boolean
 } JSON;
 
-enum JSON_context {
-  NO_CONTEXT, // top level context
-  OBJECT_CONTEXT, // when inside an object, before the ":" of an entry
-  ARRAY_CONTEXT, // when in an array
-  OBJECT_ENTRY_CONTEXT // after the ":" of an entry
-};
-
 JSON* new_JSON();
 
 char* skip_whitespace(char* source);
-char* parse_string(JSON* output_json, char* source, enum JSON_context context);
+char* parse_string(JSON* output_json, char* source);
 char* parse_boolean(JSON* output_json, char* source);
 char* parse_null(JSON* output_json, char* source);
 char* parse_number(JSON* output_json, char* source);
-char* parse_value(JSON* output_json, char* source, enum JSON_context context);
+char* parse_value(JSON* output_json, char* source);
 char* parse_object_entry(JSON* output_json, char* source);
 char* parse_array(JSON* output_json, char* source);
 char* parse_object(JSON* output_json, char* source);

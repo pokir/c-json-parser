@@ -115,7 +115,7 @@ bool object_test() {
     && json->next == NULL
 
     && json->child != NULL
-    && json->child->type == OBJECT_KEY
+    && json->child->type == STRING
     && strcmp(json->child->string_value, "one") == 0
     && json->child->number_value == 0
     && json->child->boolean_value == false
@@ -131,7 +131,7 @@ bool object_test() {
     && json->child->child->child == NULL
 
     && json->child->next != NULL
-    && json->child->next->type == OBJECT_KEY
+    && json->child->next->type == STRING
     && strcmp(json->child->next->string_value, "three") == 0
     && json->child->next->number_value == 0
     && json->child->next->boolean_value == false
@@ -165,7 +165,7 @@ bool whitespace_test() {
     && json->next == NULL
 
     && json->child != NULL
-    && json->child->type == OBJECT_KEY
+    && json->child->type == STRING
     && strcmp(json->child->string_value, "one") == 0
     && json->child->number_value == 0
     && json->child->boolean_value == false
@@ -181,7 +181,7 @@ bool whitespace_test() {
     && json->child->child->child == NULL
 
     && json->child->next != NULL
-    && json->child->next->type == OBJECT_KEY
+    && json->child->next->type == STRING
     && strcmp(json->child->next->string_value, "three") == 0
     && json->child->next->number_value == 0
     && json->child->next->boolean_value == false

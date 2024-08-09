@@ -44,7 +44,7 @@ int main() {
         printf("%f\n", first_number_json->number_value);
     }
 
-    if (object_first_key_json->type == OBJECT_KEY) {
+    if (object_first_key_json->type == STRING) {
         printf("%s\n", object_first_key_json->string_value);
     }
 
