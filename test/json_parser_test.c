@@ -200,7 +200,6 @@ bool whitespace_test() {
   free_json(json);
 
   return pass;
-
 }
 
 int main() {
