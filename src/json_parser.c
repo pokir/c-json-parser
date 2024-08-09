@@ -2,7 +2,6 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 JSON* new_JSON() {
   return calloc(1, sizeof(JSON));
