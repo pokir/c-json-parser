@@ -197,7 +197,6 @@ bool whitespace_test() {
     && json->child->next->child->next == NULL
     && json->child->next->child->child == NULL;
 
-
   free_json(json);
 
   return pass;
