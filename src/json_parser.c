@@ -148,7 +148,7 @@ char* parse_array(JSON* output_json, char* source) {
   source = skip_whitespace(source);
 
   JSON *previous_json = new_JSON();
-  source = parse_value(previous_json, source, ARRAY_CONTEXT);
+  source = parse_any(previous_json, source);
 
   if (source == NULL) return NULL;
 
@@ -169,7 +169,7 @@ char* parse_array(JSON* output_json, char* source) {
     source = skip_whitespace(source);
 
     JSON* next_json = new_JSON();
-    source = parse_value(next_json, source, ARRAY_CONTEXT);
+    source = parse_any(next_json, source);
     if (source == NULL) return NULL;
 
     previous_json->next = next_json;
@@ -209,7 +209,7 @@ char* parse_object(JSON* output_json, char* source) {
     source = skip_whitespace(source);
 
     JSON* next_json = new_JSON();
-    source = parse_value(next_json, source, OBJECT_CONTEXT);
+    source = parse_object_entry(next_json, source);
     if (source == NULL) return NULL;
 
     previous_json->next = next_json;

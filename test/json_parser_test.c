@@ -105,7 +105,7 @@ bool array_test() {
 bool object_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "{\"one\": \"two\"}")
+  bool pass = parse_json(json, "{\"one\": \"two\", \"three\": true}")
 
     && json->type == OBJECT
     && json->string_value == NULL
@@ -120,7 +120,6 @@ bool object_test() {
     && json->child->number_value == 0
     && json->child->boolean_value == false
     && json->child->previous == NULL
-    && json->child->next == NULL
 
     && json->child->child != NULL
     && json->child->child->type == STRING
@@ -129,7 +128,24 @@ bool object_test() {
     && json->child->child->boolean_value == false
     && json->child->child->previous == NULL
     && json->child->child->next == NULL
-    && json->child->child->child == NULL;
+    && json->child->child->child == NULL
+
+    && json->child->next != NULL
+    && json->child->next->type == OBJECT_KEY
+    && strcmp(json->child->next->string_value, "three") == 0
+    && json->child->next->number_value == 0
+    && json->child->next->boolean_value == false
+    && json->child->next->previous == json->child
+    && json->child->next->next == NULL
+
+    && json->child->next->child != NULL
+    && json->child->next->child->type == BOOLEAN
+    && json->child->next->child->string_value == NULL
+    && json->child->next->child->number_value == 0
+    && json->child->next->child->boolean_value == true
+    && json->child->next->child->previous == NULL
+    && json->child->next->child->next == NULL
+    && json->child->next->child->child == NULL;
 
   free_json(json);
 
@@ -139,7 +155,7 @@ bool object_test() {
 bool whitespace_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "\n\t{\n  \"one\"\n \t\n : \r\n\"two\" \n\r\n}\n\t \n")
+  bool pass = parse_json(json, "\n\t{\n  \"one\"\n \t\n : \r\n\"two\" \n\r\n, \r\t\t\t\t\"three\"\n\r   : true \t}\n\t \n")
 
     && json->type == OBJECT
     && json->string_value == NULL
@@ -154,7 +170,6 @@ bool whitespace_test() {
     && json->child->number_value == 0
     && json->child->boolean_value == false
     && json->child->previous == NULL
-    && json->child->next == NULL
 
     && json->child->child != NULL
     && json->child->child->type == STRING
@@ -163,7 +178,25 @@ bool whitespace_test() {
     && json->child->child->boolean_value == false
     && json->child->child->previous == NULL
     && json->child->child->next == NULL
-    && json->child->child->child == NULL;
+    && json->child->child->child == NULL
+
+    && json->child->next != NULL
+    && json->child->next->type == OBJECT_KEY
+    && strcmp(json->child->next->string_value, "three") == 0
+    && json->child->next->number_value == 0
+    && json->child->next->boolean_value == false
+    && json->child->next->previous == json->child
+    && json->child->next->next == NULL
+
+    && json->child->next->child != NULL
+    && json->child->next->child->type == BOOLEAN
+    && json->child->next->child->string_value == NULL
+    && json->child->next->child->number_value == 0
+    && json->child->next->child->boolean_value == true
+    && json->child->next->child->previous == NULL
+    && json->child->next->child->next == NULL
+    && json->child->next->child->child == NULL;
+
 
   free_json(json);
 
