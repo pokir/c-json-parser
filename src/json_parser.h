@@ -42,7 +42,7 @@ char* parse_value(JSON* output_json, char* source, enum JSON_context context);
 char* parse_object_entry(JSON* output_json, char* source);
 char* parse_array(JSON* output_json, char* source);
 char* parse_object(JSON* output_json, char* source);
-char* parse_any_json(JSON* output_json, char* source);
+char* parse_any(JSON* output_json, char* source);
 
 bool parse_json(JSON* output_json, char* source);
 

@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 JSON* new_JSON() {
   return calloc(1, sizeof(JSON));
@@ -132,7 +133,7 @@ char* parse_object_entry(JSON* output_json, char* source) {
 
   JSON* value_json = new_JSON();
 
-  source = parse_any_json(value_json, source);
+  source = parse_any(value_json, source);
   if (source == NULL) return NULL;
 
   output_json->child = value_json;
@@ -221,7 +222,7 @@ char* parse_object(JSON* output_json, char* source) {
 }
 
 // returns the rest of the source, or NULL if there was an error
-char* parse_any_json(JSON* output_json, char* source) {
+char* parse_any(JSON* output_json, char* source) {
   char* old_source = source;
 
   source = parse_value(output_json, old_source, NO_CONTEXT);
@@ -236,7 +237,10 @@ char* parse_any_json(JSON* output_json, char* source) {
 // returns false if there was an error, true otherwise
 bool parse_json(JSON* output_json, char* source) {
   source = skip_whitespace(source);
-  source = parse_any_json(output_json, source);
+
+  source = parse_any(output_json, source);
+  if (source == NULL) return false;
+
   source = skip_whitespace(source);
 
   if (*source != '\0') return false;
