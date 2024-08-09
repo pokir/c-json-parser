@@ -204,9 +204,9 @@ bool whitespace_test() {
 }
 
 int main() {
-  if (!string_test()) printf("String test failed");
-  if (!number_test()) printf("Number test failed");
-  if (!array_test()) printf("Array test failed");
-  if (!object_test()) printf("Object test failed");
-  if (!whitespace_test()) printf("Object test failed");
+  if (!string_test()) printf("String test failed\n");
+  if (!number_test()) printf("Number test failed\n");
+  if (!array_test()) printf("Array test failed\n");
+  if (!object_test()) printf("Object test failed\n");
+  if (!whitespace_test()) printf("Object test failed\n");
 }
