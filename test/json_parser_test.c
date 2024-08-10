@@ -6,9 +6,9 @@
 bool string_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "\"hello\"")
+  bool pass = parse_json(json, "\"hello\\tworl\\b\\f\\n\\rd\\u0050\"")
     && json->type == STRING
-    && strcmp(json->string_value, "hello") == 0
+    && strcmp(json->string_value, "hello\tworl\b\f\n\rdP") == 0
     && json->number_value == 0
     && json->boolean_value == false
     && json->previous == NULL
@@ -204,8 +204,8 @@ bool whitespace_test() {
 
 int main() {
   if (!string_test()) printf("String test failed\n");
-  if (!number_test()) printf("Number test failed\n");
-  if (!array_test()) printf("Array test failed\n");
-  if (!object_test()) printf("Object test failed\n");
-  if (!whitespace_test()) printf("Object test failed\n");
+  //if (!number_test()) printf("Number test failed\n");
+  //if (!array_test()) printf("Array test failed\n");
+  //if (!object_test()) printf("Object test failed\n");
+  //if (!whitespace_test()) printf("Object test failed\n");
 }

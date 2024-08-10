@@ -26,6 +26,7 @@ typedef struct JSON {
 JSON* new_JSON();
 
 char* skip_whitespace(char* source);
+char* parse_string_character(char* parsed_character, char* source);
 char* parse_string(JSON* output_json, char* source);
 char* parse_boolean(JSON* output_json, char* source);
 char* parse_null(JSON* output_json, char* source);
