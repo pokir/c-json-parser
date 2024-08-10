@@ -129,16 +129,27 @@ char* parse_null(JSON* output_json, char* source) {
 
 // returns the rest of the source, or NULL if there was an error
 char* parse_number(JSON* output_json, char* source) {
-  if (*source < '0' || *source > '9') return NULL;
-
-  bool reached_decimal_point = false;
+  if (*source != '-' && (*source < '0' || *source > '9')) return NULL;
 
   char* number_buffer = source;
+
+  if (*source == '-') ++source;
+
+  if (*source == '0') {
+    ++source;
+
+    // no leading zeros
+    if (*source >= '0' && *source <= '9') return NULL;
+  }
+
+  bool reached_decimal_point = false;
 
   while ((*source >= '0' && *source <= '9') || (!reached_decimal_point && *source == '.')) {
     if (*source == '.') reached_decimal_point = true;
     ++source;
   }
+
+  // TODO: exponent
 
   int number_buffer_length = source - number_buffer;
   char number_buffer_copy[(number_buffer_length + 1) * sizeof(char)];

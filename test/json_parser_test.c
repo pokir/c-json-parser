@@ -23,10 +23,10 @@ bool string_test() {
 bool number_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "1.935")
+  bool pass = parse_json(json, "-1.935")
     && json->type == NUMBER
     && json->string_value == NULL
-    && json->number_value == 1.935
+    && json->number_value == -1.935
     && json->boolean_value == false
     && json->previous == NULL
     && json->next == NULL
@@ -40,7 +40,7 @@ bool number_test() {
 bool array_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "[123, 456, \"three\", null, true, false]")
+  bool pass = parse_json(json, "[-123, 456, \"three\", null, true, false]")
 
     && json->type == ARRAY
     && json->string_value == NULL
@@ -52,7 +52,7 @@ bool array_test() {
     && json->child != NULL
     && json->child->type == NUMBER
     && json->child->string_value == NULL
-    && json->child->number_value == 123
+    && json->child->number_value == -123
     && json->child->boolean_value == false
     && json->child->previous == NULL
     && json->child->child == NULL
