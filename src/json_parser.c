@@ -131,9 +131,13 @@ char* parse_null(JSON* output_json, char* source) {
 char* parse_number(JSON* output_json, char* source) {
   if (*source != '-' && (*source < '0' || *source > '9')) return NULL;
 
-  char* number_buffer = source;
+  double number = 0;
 
-  if (*source == '-') ++source;
+  int sign = 1;
+  if (*source == '-') {
+    sign = -1;
+    ++source;
+  }
 
   if (*source == '0') {
     ++source;
@@ -143,20 +147,52 @@ char* parse_number(JSON* output_json, char* source) {
   }
 
   bool reached_decimal_point = false;
+  int shift_left_amount = 0; // -(number of digits after the decimal point) + power
 
-  while ((*source >= '0' && *source <= '9') || (!reached_decimal_point && *source == '.')) {
+  while (
+      (*source >= '0' && *source <= '9')
+      || (!reached_decimal_point && *source == '.')
+  ) {
     if (*source == '.') reached_decimal_point = true;
+    else {
+      number *= 10;
+      if (reached_decimal_point) --shift_left_amount;
+      number += *source - '0';
+    }
+
     ++source;
   }
 
-  // TODO: exponent
+  // exponent part
+  if (*source == 'e' || *source == 'E') {
+    ++source;
 
-  int number_buffer_length = source - number_buffer;
-  char number_buffer_copy[(number_buffer_length + 1) * sizeof(char)];
-  strncpy(number_buffer_copy, number_buffer, number_buffer_length);
+    int exponent = 0;
+
+    int exponent_sign = 1;
+    if (*source == '-') {
+      exponent_sign = -1;
+      ++source;
+    } else if (*source == '+') ++source;
+
+    while (*source >= '0' && *source <= '9') {
+      exponent *= 10;
+      exponent += *source - '0';
+      ++source;
+    }
+
+    exponent *= exponent_sign;
+
+    shift_left_amount += exponent;
+  }
+
+  if (shift_left_amount >= 0) while (shift_left_amount--) number *= 10;
+  else while (shift_left_amount++) number /= 10;
+
+  number *= sign;
 
   output_json->type = NUMBER;
-  output_json->number_value = atof(number_buffer_copy);
+  output_json->number_value = number;
 
   return source;
 }

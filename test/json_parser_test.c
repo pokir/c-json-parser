@@ -23,10 +23,10 @@ bool string_test() {
 bool number_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "-1.935")
+  bool pass = parse_json(json, "-1.935e-2")
     && json->type == NUMBER
     && json->string_value == NULL
-    && json->number_value == -1.935
+    && json->number_value == -0.01935
     && json->boolean_value == false
     && json->previous == NULL
     && json->next == NULL
