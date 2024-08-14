@@ -6,9 +6,9 @@
 bool string_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "\"hello\\tworl\\b\\f\\n\\rd\\u0050\"")
+  bool pass = parse_json(json, (uint8_t*)"\"hello\\tworl\\b\\f\\n\\rd\\u0050\"")
     && json->type == STRING
-    && strcmp(json->string_value, "hello\tworl\b\f\n\rdP") == 0
+    && strcmp((char*)get_JSON_string(json), "hello\tworl\b\f\n\rdP") == 0
     && json->number_value == 0
     && json->boolean_value == false
     && json->previous == NULL
@@ -23,7 +23,7 @@ bool string_test() {
 bool number_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "-1.935e-2")
+  bool pass = parse_json(json, (uint8_t*)"-1.935e-2")
     && json->type == NUMBER
     && json->string_value == NULL
     && json->number_value == -0.01935
@@ -40,7 +40,7 @@ bool number_test() {
 bool array_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "[-123, 456, \"three\", null, true, false]")
+  bool pass = parse_json(json, (uint8_t*)"[-123, 456, \"three\", null, true, false]")
 
     && json->type == ARRAY
     && json->string_value == NULL
@@ -67,7 +67,7 @@ bool array_test() {
 
     && json->child->next->next != NULL
     && json->child->next->next->type == STRING
-    && strcmp(json->child->next->next->string_value, "three") == 0
+    && strcmp((char*)get_JSON_string(json->child->next->next), "three") == 0
     && json->child->next->next->number_value == 0
     && json->child->next->next->boolean_value == false
     && json->child->next->next->previous == json->child->next
@@ -105,7 +105,7 @@ bool array_test() {
 bool object_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "{\"one\": \"two\", \"three\": true}")
+  bool pass = parse_json(json, (uint8_t*)"{\"one\": \"two\", \"three\": true}")
 
     && json->type == OBJECT
     && json->string_value == NULL
@@ -116,14 +116,14 @@ bool object_test() {
 
     && json->child != NULL
     && json->child->type == STRING
-    && strcmp(json->child->string_value, "one") == 0
+    && strcmp((char*)get_JSON_string(json->child), "one") == 0
     && json->child->number_value == 0
     && json->child->boolean_value == false
     && json->child->previous == NULL
 
     && json->child->child != NULL
     && json->child->child->type == STRING
-    && strcmp(json->child->child->string_value, "two") == 0
+    && strcmp((char*)get_JSON_string(json->child->child), "two") == 0
     && json->child->child->number_value == 0
     && json->child->child->boolean_value == false
     && json->child->child->previous == NULL
@@ -132,7 +132,7 @@ bool object_test() {
 
     && json->child->next != NULL
     && json->child->next->type == STRING
-    && strcmp(json->child->next->string_value, "three") == 0
+    && strcmp((char*)get_JSON_string(json->child->next), "three") == 0
     && json->child->next->number_value == 0
     && json->child->next->boolean_value == false
     && json->child->next->previous == json->child
@@ -155,7 +155,7 @@ bool object_test() {
 bool whitespace_test() {
   JSON* json = new_JSON();
 
-  bool pass = parse_json(json, "\n\t{\n  \"one\"\n \t\n : \r\n\"two\" \n\r\n, \r\t\t\t\t\"three\"\n\r   : true \t}\n\t \n")
+  bool pass = parse_json(json, (uint8_t*)"\n\t{\n  \"one\"\n \t\n : \r\n\"two\" \n\r\n, \r\t\t\t\t\"three\"\n\r   : true \t}\n\t \n")
 
     && json->type == OBJECT
     && json->string_value == NULL
@@ -166,14 +166,14 @@ bool whitespace_test() {
 
     && json->child != NULL
     && json->child->type == STRING
-    && strcmp(json->child->string_value, "one") == 0
+    && strcmp((char*)get_JSON_string(json->child), "one") == 0
     && json->child->number_value == 0
     && json->child->boolean_value == false
     && json->child->previous == NULL
 
     && json->child->child != NULL
     && json->child->child->type == STRING
-    && strcmp(json->child->child->string_value, "two") == 0
+    && strcmp((char*)get_JSON_string(json->child->child), "two") == 0
     && json->child->child->number_value == 0
     && json->child->child->boolean_value == false
     && json->child->child->previous == NULL
@@ -182,7 +182,7 @@ bool whitespace_test() {
 
     && json->child->next != NULL
     && json->child->next->type == STRING
-    && strcmp(json->child->next->string_value, "three") == 0
+    && strcmp((char*)get_JSON_string(json->child->next), "three") == 0
     && json->child->next->number_value == 0
     && json->child->next->boolean_value == false
     && json->child->next->previous == json->child
@@ -207,5 +207,5 @@ int main() {
   if (!number_test()) printf("Number test failed\n");
   if (!array_test()) printf("Array test failed\n");
   if (!object_test()) printf("Object test failed\n");
-  if (!whitespace_test()) printf("Object test failed\n");
+  if (!whitespace_test()) printf("White space test failed\n");
 }

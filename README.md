@@ -58,8 +58,10 @@ int main() {
         printf("%f\n", first_number_json->number_value);
     }
 
-    if (object_first_key_json->type == OBJECT_KEY) {
-        printf("%s\n", object_first_key_json->string_value);
+    if (object_first_key_json->type == STRING) {
+        uint8_t* utf8_string = get_JSON_string(object_first_key_json);
+        printf("%s\n", utf8_string);
+        free(utf8_string); // important! free the string
     }
 
     if (null_json->type == NULL_VALUE) {

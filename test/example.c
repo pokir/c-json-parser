@@ -6,7 +6,7 @@ int main() {
     JSON* array_json = new_JSON();
 
     // parse a string into the JSON
-    bool success = parse_json(array_json, "[{\"key1\": \"value1\", \"key2\": \"ko\"}, 12345, 0.6789, null, true, false]");
+    bool success = parse_json(array_json, (uint8_t*)"[{\"key1\": \"value1\", \"key2\": \"ko\"}, 12345, 0.6789, null, true, false]");
 
     if (!success) {
         printf("Could not parse the JSON");
@@ -45,7 +45,9 @@ int main() {
     }
 
     if (object_first_key_json->type == STRING) {
-        printf("%s\n", object_first_key_json->string_value);
+        uint8_t* utf8_string = get_JSON_string(object_first_key_json);
+        printf("%s\n", utf8_string);
+        free(utf8_string); // important! free the string
     }
 
     if (null_json->type == NULL_VALUE) {

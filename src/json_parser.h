@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 enum JSON_type {
   STRING, // for strings and object keys
@@ -18,25 +19,31 @@ typedef struct JSON {
   struct JSON* previous; // points to the previous element (in array or object)
   struct JSON* child; // for object and array (points to first element), and for object keys (points to the value)
 
-  char* string_value; // for string and object entry
+  uint32_t* string_value; // for string and object entry (array of code points)
   double number_value; // for number
   bool boolean_value; // for boolean
 } JSON;
 
 JSON* new_JSON();
 
-char* skip_whitespace(char* source);
-char* parse_string_character(char* parsed_character, char* source);
-char* parse_string(JSON* output_json, char* source);
-char* parse_boolean(JSON* output_json, char* source);
-char* parse_null(JSON* output_json, char* source);
-char* parse_number(JSON* output_json, char* source);
-char* parse_value(JSON* output_json, char* source);
-char* parse_object_entry(JSON* output_json, char* source);
-char* parse_array(JSON* output_json, char* source);
-char* parse_object(JSON* output_json, char* source);
-char* parse_any(JSON* output_json, char* source);
+uint8_t* skip_whitespace(uint8_t* source);
+uint8_t* parse_utf8_character(uint32_t* output_code_point, uint8_t* source);
+uint8_t* parse_string_character(uint32_t* parsed_code_point, uint8_t* source);
+uint8_t* parse_string(JSON* output_json, uint8_t* source);
+uint8_t* parse_boolean(JSON* output_json, uint8_t* source);
+uint8_t* parse_null(JSON* output_json, uint8_t* source);
+uint8_t* parse_number(JSON* output_json, uint8_t* source);
+uint8_t* parse_value(JSON* output_json, uint8_t* source);
+uint8_t* parse_object_entry(JSON* output_json, uint8_t* source);
+uint8_t* parse_array(JSON* output_json, uint8_t* source);
+uint8_t* parse_object(JSON* output_json, uint8_t* source);
+uint8_t* parse_any(JSON* output_json, uint8_t* source);
 
-bool parse_json(JSON* output_json, char* source);
+bool parse_json(JSON* output_json, uint8_t* source);
 
 void free_json(JSON* json);
+
+int utf8_num_bytes(uint32_t code_point);
+void code_point_to_utf8(uint8_t* output, int* output_num_bytes, uint32_t code_point);
+
+uint8_t* get_JSON_string(JSON* json);
