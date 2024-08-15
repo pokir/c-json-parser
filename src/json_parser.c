@@ -73,7 +73,10 @@ uint8_t* parse_string_character(uint32_t* parsed_code_point, uint8_t* source) {
 
       source += 4;
     } else {
-      if (*source == 'b') *parsed_code_point = '\b';
+      if (*source == '"') *parsed_code_point = '"';
+      else if (*source == '\\') *parsed_code_point = '\\';
+      else if (*source == '/') *parsed_code_point = '/';
+      else if (*source == 'b') *parsed_code_point = '\b';
       else if (*source == 'f') *parsed_code_point = '\f';
       else if (*source == 'n') *parsed_code_point = '\n';
       else if (*source == 'r') *parsed_code_point = '\r';
