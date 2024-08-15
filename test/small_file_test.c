@@ -14,11 +14,8 @@ int main() {
   fseek(file, 0, SEEK_SET);
 
   uint8_t source[length];
-  int index = 0;
-  int byte;
-  while ((byte = getc(file)) != EOF) {
-    source[index++] = byte;
-  }
+  fread(source, 1, length, file);
+  fclose(file);
 
   JSON* json = new_JSON();
   if (!parse_json(json, source)) printf("Could not parse the JSON file");
