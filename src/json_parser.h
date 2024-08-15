@@ -28,6 +28,7 @@ JSON* new_JSON();
 
 uint8_t* skip_whitespace(uint8_t* source);
 uint8_t* parse_utf8_character(uint32_t* output_code_point, uint8_t* source);
+uint8_t* parse_unicode_escape_sequence(uint32_t* parsed_code_point, uint8_t* source);
 uint8_t* parse_string_character(uint32_t* parsed_code_point, uint8_t* source);
 uint8_t* parse_string(JSON* output_json, uint8_t* source);
 uint8_t* parse_boolean(JSON* output_json, uint8_t* source);

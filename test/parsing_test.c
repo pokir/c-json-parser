@@ -39,6 +39,37 @@ bool parse_utf8_character_test() {
   return true;
 }
 
+bool parse_unicode_escape_sequence_test() {
+  {
+    uint8_t* source = (uint8_t*)"\\uCCC4";
+
+    uint32_t code_point;
+    uint8_t* new_source = parse_unicode_escape_sequence(&code_point, source);
+
+    if (!(
+          new_source != NULL
+          && *new_source == '\0'
+          && code_point == 0xCCC4
+         )) return false;
+  }
+
+  {
+    uint8_t* source = (uint8_t*)"\\uD801\\uDC37";
+
+    uint32_t code_point;
+    uint8_t* new_source = parse_unicode_escape_sequence(&code_point, source);
+
+    if (!(
+          new_source != NULL
+          && *new_source == '\0'
+          && code_point == 0x10437
+         )) return false;
+  }
+
+  return true;
+}
+
 int main() {
-  if (!parse_utf8_character_test()) printf("parse_utf8_character_test failed\n");
+  if (!parse_utf8_character_test()) printf("parse_utf8_character test failed\n");
+  if (!parse_unicode_escape_sequence_test()) printf("parse_unicode_escape_sequence test failed\n");
 }

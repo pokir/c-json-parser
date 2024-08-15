@@ -45,46 +45,68 @@ uint8_t* parse_utf8_character(uint32_t* output_code_point, uint8_t* source) {
 }
 
 // returns the rest of the source, or NULL if there was an error
-// puts the parsed character into parsed_character
+// puts the parsed character's code point into parsed_code_point
+uint8_t* parse_unicode_escape_sequence(uint32_t* parsed_code_point, uint8_t* source) {
+  if (*source != '\\') return NULL;
+  ++source;
+  if (*source != 'u') return NULL;
+  ++source;
+
+  uint32_t code_point = 0;
+
+  for (int i = 0; i < 4; ++i) {
+    code_point *= 16;
+
+    if (*source >= '0' && *source <= '9') code_point += *source - '0';
+    else if (*source >= 'a' && *source <= 'f') code_point += *source - 'a' + 10;
+    else if (*source >= 'A' && *source <= 'F') code_point += *source - 'A' + 10;
+    else return NULL;
+
+    ++source;
+  }
+
+  // handle surrogate pairs
+  if (code_point >= 0xD800 && code_point <= 0xDBFF) {
+    uint32_t second_code_point;
+    source = parse_unicode_escape_sequence(&second_code_point, source);
+    if (second_code_point < 0xDC00 || second_code_point > 0xDFFF) return NULL;
+
+    code_point -= 0xD800;
+    code_point <<= 10;
+    code_point |= second_code_point - 0xDC00;
+    code_point += 0x10000;
+  }
+
+  // TODO: handle invalid first surrogate? (between 0xDC00 and 0xDFFF)
+
+  *parsed_code_point = code_point;
+
+  return source;
+}
+
+// returns the rest of the source, or NULL if there was an error
+// puts the parsed character's code point into parsed_code_point
 uint8_t* parse_string_character(uint32_t* parsed_code_point, uint8_t* source) {
-  if (*source == '\\') {
+  // try parsing unicode escape sequence
+  uint8_t* new_source = parse_unicode_escape_sequence(parsed_code_point, source);
+  if (new_source != NULL) {
+    source = new_source;
+  } else if (*source == '\\') {
     ++source;
 
     if (*source == '\n' || *source == '\0') return NULL;
 
-    if (*source == 'u') {
-      ++source;
-      if (strlen(source) < 4) return NULL;
+    if (*source == '"') *parsed_code_point = '"';
+    else if (*source == '\\') *parsed_code_point = '\\';
+    else if (*source == '/') *parsed_code_point = '/';
+    else if (*source == 'b') *parsed_code_point = '\b';
+    else if (*source == 'f') *parsed_code_point = '\f';
+    else if (*source == 'n') *parsed_code_point = '\n';
+    else if (*source == 'r') *parsed_code_point = '\r';
+    else if (*source == 't') *parsed_code_point = '\t';
+    else return NULL;
 
-      int code_point = 0;
-
-      for (int i = 0; i < 4; ++i) {
-        code_point *= 16;
-
-        if (source[i] >= '0' && source[i] <= '9') code_point += source[i] - '0';
-        else if (source[i] >= 'a' && source[i] <= 'f') code_point += source[i] - 'a' + 10;
-        else if (source[i] >= 'A' && source[i] <= 'F') code_point += source[i] - 'A' + 10;
-        else return NULL;
-      }
-
-      *parsed_code_point = code_point;
-
-      // TODO: handle consecutive \u
-
-      source += 4;
-    } else {
-      if (*source == '"') *parsed_code_point = '"';
-      else if (*source == '\\') *parsed_code_point = '\\';
-      else if (*source == '/') *parsed_code_point = '/';
-      else if (*source == 'b') *parsed_code_point = '\b';
-      else if (*source == 'f') *parsed_code_point = '\f';
-      else if (*source == 'n') *parsed_code_point = '\n';
-      else if (*source == 'r') *parsed_code_point = '\r';
-      else if (*source == 't') *parsed_code_point = '\t';
-      else return NULL;
-
-      ++source;
-    }
+    ++source;
   } else {
     source = parse_utf8_character(parsed_code_point, source);
   }
