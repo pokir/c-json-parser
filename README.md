@@ -82,7 +82,7 @@ int main() {
 
 ```sh
 make test
-cd build # so executables can have access to the resource folder
+cd target # so executables can have access to the resource folder
 ```
 
-Then run the files in the `build` folder.
+Then run the files in the `target` folder.
