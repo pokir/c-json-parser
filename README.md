@@ -1,6 +1,6 @@
 # c-json-parser
 
-JSON parser for C (WORK IN PROGRESS, WRITTEN FOR FUN).
+JSON parser for C.
 
 ## Usage
 
